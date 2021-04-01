@@ -14,7 +14,7 @@ void Task1(int N) {
 #pragma omp parallel num_threads(2) reduction(+:sum)
 	{
 		int currThread = omp_get_thread_num();
-		//sum+=Work(omp_get_thread_num()*N/omp_get_num_threads();++omp_get_thread_num()*N/omp_get_num_threads()); для k нитей
+		//sum+=Work(omp_get_thread_num()*N/omp_get_num_threads();(omp_get_thread_num()+1)*N/omp_get_num_threads()); для k нитей
 		if (currThread == 0) {
 			sum += WorkSum(0, N / 2);
 			printf("[%d]: Sum=%d\n", currThread, sum);
@@ -39,7 +39,24 @@ void Task2(int N, int k) {
 	printf("Sum = %d\n", sum);
 }
 
+void Task3(int N, int k) {
+	int sum = 0;
+#pragma omp parallel num_threads(k) reduction(+:sum)
+	{
+#pragma omp for
+		for (int i = 0; i < N; ++i)
+			sum += 1;
+		printf("[%d]: Sum=%d\n", omp_get_thread_num(), sum);
+	}
+	printf("Sum=%d\n",sum);
+}
+
+void Task4() {
+	int k = 4, N = 10;
+}
+
 int main() {
+
 	int N = 100000000, sum = 0;
 	const int arrNumbersSize = 7;
 	int arrNumbers[arrNumbersSize] = { 1,2,5,10,100,1000,N };
@@ -54,6 +71,15 @@ int main() {
 	//	printf("time %f\n", (double)(end - start) / CLOCKS_PER_SEC);
 	//}
 
+	//start = clock();
+	//Task2(N, 4);
+	//end = clock();
+	//printf("time %f\n", (double)(end - start) / CLOCKS_PER_SEC);
+	//start = clock();
+	//Task3(N, 4);
+	//end = clock();
+	//printf("time %f\n", (double)(end - start) / CLOCKS_PER_SEC);
+
 	const int  arrThreadsSize = 4;
 	int arrThreads[arrThreadsSize] = { 2,4,8,16 };
 	printf("Task2\n");
@@ -65,6 +91,19 @@ int main() {
 			printf("time %f\n", (double)(end - start) / CLOCKS_PER_SEC);
 		}
 	}
+
+	printf("Task3");
+	for (int k = 0; k < arrThreadsSize; ++k) {
+		for (int i = 0; i < arrNumbersSize; ++i) {
+			start = clock();
+			Task3(arrNumbers[i], arrThreads[k]);
+			end = clock();
+		}
+		printf("time %f\n", (double)(end - start) / CLOCKS_PER_SEC);
+	}
+
+	printf("Task4");
+	Task4();
 
 	//добавить массив нитей, если нынешний тред==arrThreads[k]
 //	for (int i = 0; i < arrSize; ++i) {
