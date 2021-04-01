@@ -15,7 +15,7 @@ void Task1(int N) {
 	{
 		int currThread = omp_get_thread_num();
 		//дальше назначать отдельно для каждой нити, если использовать внутри parallel области for, то он будет повторяться k раз, k=numThreads
-		//for(int j=0;j<k;++j)if(currThread=omp_get_thread_num())sum+=Work(j*N/10;++j*N/10);
+		//sum+=Work(omp_get_num_thread()*N/omp_get_threads_num();++omp_get_num_thread()*N/omp_get_threads_num());
 		if (currThread == 0) {
 			sum += WorkSum(0, N / 2);
 			printf("[%d]: Sum=%d\n", currThread, sum);
