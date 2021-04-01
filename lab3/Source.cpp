@@ -27,7 +27,7 @@ void Task1(int N) {
 	printf("Sum = %d\n", sum);
 }
 
-void Task2(int N,int k) {
+void Task2(int N, int k) {
 	int sum = 0;
 #pragma omp parallel num_threads(k) reduction(+:sum)
 	{
