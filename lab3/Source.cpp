@@ -3,6 +3,7 @@
 #include <ctime>
 #include <cmath>
 #include <corecrt_math_defines.h>
+#include <iostream>
 
 int WorkSum(int currI, int n) {
 	int sum = 0;
@@ -129,43 +130,26 @@ int main() {
 	printf("Task5\n");
 	long long n = 2;
 	int i = 0;
-	double eps = 0.001;
-	for (int k = 1; k < 20; ++k) {
-		do {
+	double eps = 0.001, time;
+	printf("\t");
+	for (int k = 1; k <= 4; ++k)
+		printf("\t%d\t", k);
+	do {
+		printf("\n%.10f\t", eps);
+		for (int k = 1; k <= 4;) {
 			start = clock();
 			double myPi = Task5(n, k);
 			end = clock();
+			time = (double)(end - start) / CLOCKS_PER_SEC;
 			if (fabs(M_PI - myPi) > eps)n *= 2;
 			else {
-				//printf("ITERATION %d\nN=%lld\neps   %.10f\n FABS %.10f\n   PI %.10f\nvalue %.10f\ntime %f\n\n",i++, n, eps,
-				//	fabs(M_PI - myPi), M_PI, myPi, (double)(end - start) / CLOCKS_PER_SEC);
-				printf("%.10f\nk= %d\n%.10f\n\n", myPi,k, Task5Serial(n));//проверить с разным количеством нитей значение pi
-				eps *= 0.1;
+				printf("%.10f\t", time);
+				if (time > 120)break;
+				++k;
 			}
-		} while ((double)(end - start) / CLOCKS_PER_SEC < 120);
-	}
-
-	//добавить массив нитей, если нынешний тред==arrThreads[k]
-//	for (int i = 0; i < arrSize; ++i) {
-//		int sum = 0;
-//		start = clock();
-//#pragma omp parallel num_threads(2) reduction(+:sum)
-//		{
-//			int currThread = omp_get_thread_num();
-//			if (currThread == 0) {
-//				sum += WorkSum(0, arrNumbers[i] / 2);
-//				printf("[%d]: Sum=%d\n", currThread, sum);
-//			}
-//			if (currThread == 1) {
-//				sum += WorkSum(arrNumbers[i] / 2, arrNumbers[i]);
-//				printf("[%d]: Sum=%d\n", currThread, sum);
-//			}
-//		}
-//		printf("Sum = %d\n", sum);
-//		end = clock();
-//		printf("time %f\n", (double)(end - start) / CLOCKS_PER_SEC);
-//	}
-
+		}
+		eps *= 0.1;
+	} while (time < 120);
 
 	sum = 0;
 	start = clock();
