@@ -15,7 +15,7 @@ int WorkSum(int currI, int n) {
 
 void Task1(int N) {
 	int sum = 0;
-#pragma omp parallel num_threads(2) reduction(+:sum)
+#pragma omp parallel num_threads(2) 
 	{
 		int currThread = omp_get_thread_num();
 		//sum+=Work(omp_get_thread_num()*N/omp_get_num_threads();(omp_get_thread_num()+1)*N/omp_get_num_threads()); для k нитей
