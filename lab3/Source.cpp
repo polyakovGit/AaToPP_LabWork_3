@@ -33,12 +33,14 @@ void Task1(int N) {
 
 void Task2(int N, int k) {
 	int sum = 0;
-#pragma omp parallel num_threads(k) reduction(+:sum)
+#pragma omp parallel num_threads(k)
 	{
+		int localSum = 0;
 		//sum += WorkSum(omp_get_thread_num()*N/omp_get_num_threads(),(omp_get_thread_num()+1)*N/omp_get_num_threads());
 		int currThread = omp_get_thread_num();
-		sum += WorkSum(currThread * N / k, (currThread + 1) * N / k);
-		printf("[%d]: Sum=%d\n", currThread, sum);
+		localSum += WorkSum(currThread * N / k, (currThread + 1) * N / k);
+		printf("[%d]: Sum=%d\n", currThread, localSum);
+		sum += localSum;
 	}
 	printf("Sum = %d\n", sum);
 }
@@ -241,11 +243,11 @@ int main() {
 		eps *= 0.1;
 	} while (time <= 120);
 
-	//sum = 0;
-	//start = clock();
-	//for (int i = 0; i < N; ++i)
-	//	sum += 1;
-	//end = clock();
-	//printf("%d\ntime SERIAL %f", sum, (double)(end - start) / CLOCKS_PER_SEC);
+	sum = 0;
+	start = clock();
+	for (int i = 0; i < N; ++i)
+		sum += 1;
+	end = clock();
+	printf("%d\ntime SERIAL %f", sum, (double)(end - start) / CLOCKS_PER_SEC);
 	return 0;
 }
